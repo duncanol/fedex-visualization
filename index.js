@@ -81,14 +81,15 @@ d3.json("test.json", function(error, graph) {
     .text("Dragged!")
   });
 
+  node.each(function(thisData) {
+    var thisD3Node = nodeGroup.select(".node_" + thisData.id);
+    thisData.originalR = thisD3Node.attr("r");
+  });
+
   node.on("mouseover", function(thisData) {
     
     var thisNode = this;
     var thisD3Node = nodeGroup.select(".node_" + thisData.id);
-
-    if (thisNode.originalR === 'undefined') {
-      thisNode.originalR = thisNode.r;
-    }    
 
     textGroup
       .selectAll("text")
@@ -102,12 +103,16 @@ d3.json("test.json", function(error, graph) {
     
     thisD3Node
       .transition()
-      .attr("r", thisNode.originalR * 2);
+      .attr("r", thisData.originalR * 2);
 
   });
 
 
-  node.on("mouseout", function(d) {
+  node.on("mouseout", function(thisData) {
+
+    var thisNode = this;
+    var thisD3Node = nodeGroup.select(".node_" + thisData.id);
+
     textGroup
     .selectAll("text")
     .transition()
@@ -117,12 +122,9 @@ d3.json("test.json", function(error, graph) {
       this.remove();
     })
 
-
-    var thisNode = nodeGroup.select(".node_" + d.id);
-
-    if (thisNode.originalR != null) {
-      thisNode.transition()
-        .attr("r", thisNode.originalR);
+    if (thisData.originalR != null) {
+      thisD3Node.transition()
+        .attr("r", thisData.originalR);
     }
   });
 
