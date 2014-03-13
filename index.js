@@ -19,34 +19,20 @@ var svg = d3.select("body").append("svg")
     .attr("height", height)
     .call(zoom.on("zoom", redraw));
 
-// zoom(svg);
-
-// zoom.on('zoomend', function() {
-//   console.log("Zoomed!")
-// });
-
-
-
-
 var nodeGroup = svg.append('g');
-
 var textGroup = svg.append('g');
 
-
-
 function redraw() {
-  console.log("here", d3.event.translate, d3.event.scale);
-    
-
+  
   if (zoom.scaleChanged()) {
-    nodeGroup
+    svg.selectAll("g")
       .transition()
       .duration(100)
       .attr("transform", 
         "translate(" + d3.event.translate + ") " +
         "scale(" + d3.event.scale + ")");
   } else {
-    nodeGroup
+    svg.selectAll("g")
       .attr("transform", 
         "translate(" + d3.event.translate + ") " +
         "scale(" + d3.event.scale + ")");
