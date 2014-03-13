@@ -58,23 +58,12 @@ d3.json("test.json", function(error, graph) {
       .enter()
       .append("circle")
         .attr("id", function(d) { return d.id; })        
-        .attr("class", "node")
+        .attr("class", function(d) { return "node node_" + d.id; })
         .attr("r", function(d) { 
           return d.name == 'Technology Strategy Board Network' ? 10 : 5; 
         })
         .style("fill", function(d) { return color(d.group); })
         .call(force.drag);
-
-  node.on("mouseout", function(d){
-      textGroup
-      .selectAll("text")
-      .transition()
-      .duration(500)
-      .style('opacity', 0)
-      .each("end", function() {
-        this.remove();
-      })
-    });
 
   node.on("dblclick", function(d) {
     textGroup
@@ -92,23 +81,49 @@ d3.json("test.json", function(error, graph) {
     .text("Dragged!")
   });
 
-  node.on("mouseover", function(d) {
+  node.on("mouseover", function(thisData) {
+    
+    var thisNode = this;
+    var thisD3Node = nodeGroup.select(".node_" + thisData.id);
+
+    if (thisNode.originalR === 'undefined') {
+      thisNode.originalR = thisNode.r;
+    }    
+
     textGroup
       .selectAll("text")
       .remove();
 
     textGroup
       .append("text")
-        .text(d.name)
-          .attr("x", d.x + 10)
-          .attr("y", d.y - 10)
-
-    var thisNode = nodeGroup.select("#" + d.id);
-
-    thisNode
+        .text(thisData.name)
+          .attr("x", thisData.x + 10)
+          .attr("y", thisData.y - 10)
+    
+    thisD3Node
       .transition()
-      .attr("r", thisNode.attr("r") * 2);
+      .attr("r", thisNode.originalR * 2);
 
+  });
+
+
+  node.on("mouseout", function(d) {
+    textGroup
+    .selectAll("text")
+    .transition()
+    .duration(500)
+    .style('opacity', 0)
+    .each("end", function() {
+      this.remove();
+    })
+
+
+    var thisNode = nodeGroup.select(".node_" + d.id);
+
+    if (thisNode.originalR != null) {
+      thisNode.transition()
+        .attr("r", thisNode.originalR);
+    }
   });
 
   link.on("mouseover", function(d) {
