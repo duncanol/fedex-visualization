@@ -1,9 +1,14 @@
 ZoomablePane = function(config) {
 
-  this.width = config.width;
-  this.height = config.height;
+
+
   this.domNode = config.domNode;
 
+  var $domNode = jQuery(this.domNode);
+
+  this.width = $domNode.innerWidth();
+  this.height = 1000;
+  
   var color = d3.scale.category20();
 
   var zoom = d3.behavior.zoom().size([this.width, this.height]);
