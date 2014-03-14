@@ -74,7 +74,7 @@ ForceDirectedGraph.prototype.refresh = function() {
       	} else if (d.classname == "Group") {
 					return "/images/network.svg";
       	} else if (d.classname == "UserGroup") {
-					return "/images/usergroup.svg";
+					return "/images/user-group.svg";
       	} else {
 					return "/images/org.svg";
       	}
@@ -152,6 +152,22 @@ ForceDirectedGraph.prototype.refresh = function() {
 ForceDirectedGraph.prototype.clickNode = function(nodes) {
 	var _this = this;
 	nodes.on("click", function(d) {
+
+		jQuery('#detail-pane').removeClass("hide");
+		jQuery('#detail-name').html(d.name);
+
+		if (typeof d.description !== "undefined") {
+			jQuery('#detail-desc').html(d.description);	
+		}
+
+		if (typeof d.comments !== "undefined") {
+			jQuery('#detail-desc').html(d.comments);	
+		}
+		
+		if (typeof d.friendlyURL !== "undefined") {
+			jQuery('#detail-href').attr("href", "https://connect.innovateuk.org/web" + d.friendlyURL);	
+		}
+				
 
 	  // if (d.selected) {
 

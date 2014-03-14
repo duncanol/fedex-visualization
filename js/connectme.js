@@ -28,11 +28,11 @@ jQuery(document).ready(function() {
 		if (button.hasClass('btn-success')) {
 			button.removeClass('btn-success');
 			button.addClass('btn-default');
-			force.removePeopleFilter();
+			force.addPeopleFilter();
 		} else {
 			button.addClass('btn-success');
 			button.removeClass('btn-default');
-			force.addPeopleFilter();
+			force.removePeopleFilter();
 		}
 	});
 
