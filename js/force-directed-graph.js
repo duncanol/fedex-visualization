@@ -20,13 +20,26 @@ ForceDirectedGraph = function(config) {
 
 ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
 
+	var _this = this;
 	var nodeGroup = this.nodeGroup;
 	var textGroup = this.textGroup;
 
 	var color = d3.scale.category20();
+	
+	this.nodes = this.nodes.concat(nodes);
 	    
-	this.nodes = nodes;
-	this.links = links;
+	var edges = [];
+
+	links.forEach(function(e) { 
+	    // Get the source and target nodes
+	    var sourceNode = _this.nodes.filter(function(n) { return n.rid === e.osource; })[0],
+	        targetNode = _this.nodes.filter(function(n) { return n.rid === e.otarget; })[0];
+
+	    // Add the edge to the array
+	    edges.push({source: sourceNode, target: targetNode});
+	});
+
+	this.links = this.links.concat(edges);
 
 	this.force
     .nodes(this.nodes)
@@ -110,8 +123,16 @@ ForceDirectedGraph.prototype.clickNode = function(nodes) {
 	  _this.selectedNode = this;
 	  d3.json("http://172.30.128.106:8080/node/" + d.rid + "/2",
 			function(error, graph) {
-			// d3.json("/test2.json", function(error, graph) {
-			  _this.addNodes(graph.nodes, graph.links);
+
+				var newNodes = graph.nodes.filter(function(node) {
+					return _this.nodes.filter(function(n2) {return n2.rid == node.rid;}).length == 0;
+				});
+
+				var newLinks = graph.links.filter(function(link) {
+					return _this.links.filter(function(l2) {return l2.rid == link.rid;}).length == 0;
+				});
+
+			  _this.addNodes(newNodes, newLinks);
 			}
 		);
 	});
