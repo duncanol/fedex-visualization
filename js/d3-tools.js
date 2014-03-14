@@ -1,20 +1,22 @@
 ZoomablePane = function(config) {
 
-  var width = config.width,
-    height = config.height;
+
+  this.width = config.width;
+  this.height = config.height;
+  this.domNode = config.domNode;
 
   var color = d3.scale.category20();
 
-  var zoom = d3.behavior.zoom().size([width, height]);
+  var zoom = d3.behavior.zoom().size([this.width, this.height]);
   zoom.previousScale = zoom.scale();
   zoom.scaleChanged = function() {
     return zoom.scale() != zoom.previousScale;
   };
 
-  var svg = d3.select("body")
+  var svg = d3.select(this.domNode)
     .append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", this.width)
+        .attr("height", this.height)
         .call(zoom.on("zoom", redraw)).on("dblclick.zoom", null);
 
   function redraw() {
@@ -37,7 +39,4 @@ ZoomablePane = function(config) {
 
   this.svg = svg;
   this.zoom = zoom;
-  this.width = config.width;
-  this.height = config.height;
-
 };

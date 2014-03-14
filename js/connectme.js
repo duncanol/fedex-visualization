@@ -2,7 +2,8 @@ jQuery(document).ready(function() {
 
 	var pane = new ZoomablePane({
 		width: 1000,
-		height: 1000
+		height: 1000,
+		domNode: '.container-main'
 	});
 
 	var svg = pane.svg;
