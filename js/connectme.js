@@ -18,8 +18,11 @@ jQuery(document).ready(function() {
 	    .linkDistance(30)
 	    .size([pane.width, pane.height]);
 
-	// d3.json("http://172.30.128.106:8080/sql").post("select expand(out(memberof)) from #11:1422", function(error, graph) {
-	d3.json("/test.json", function(error, graph) {
+	d3.json("http://172.30.128.106:8080/sql").post("select expand(out(memberof)) from #11:1422", function(error, graph) {
+	// d3.json("/test.json", function(error, graph) {
+
+		console.log(graph)
+
 	  force
 	      .nodes(graph.nodes)
 	      .links(graph.links);
@@ -56,8 +59,8 @@ jQuery(document).ready(function() {
 	      .append("circle")
 	      // .append("svg:image")
 	      //   .attr("xlink:href", "/images/1394715037_location-24.svg")
-	        .attr("id", function(d) { return d.id; })        
-	        .attr("class", function(d) { return "node node_" + d.id; })
+	        .attr("id", function(d) { return d["@rid"].substring(1); })        
+	        .attr("class", function(d) { return "node node_" + d["@rid"].replace('#', '_').replace(':', '_'); })
 	        .attr("r", function(d) { 
 	          return d.name == 'Technology Strategy Board Network' ? 10 : 5; 
 	        })
@@ -91,14 +94,14 @@ jQuery(document).ready(function() {
 	    });
 
 	    node.each(function(thisData) {
-	      var thisD3Node = nodeGroup.select(".node_" + thisData.id);
+	      var thisD3Node = nodeGroup.select(".node_" + thisData["@rid"].replace('#', '_').replace(':', '_'));
 	      thisData.originalR = thisD3Node.attr("r");
 	    });
 
 	    node.on("mouseover", function(thisData) {
 	      
 	      var thisNode = this;
-	      var thisD3Node = nodeGroup.select(".node_" + thisData.id);
+	      var thisD3Node = nodeGroup.select(".node_" + thisData["@rid"].replace('#', '_').replace(':', '_'));
 
 	      textGroup
 	        .selectAll("text")
@@ -120,7 +123,7 @@ jQuery(document).ready(function() {
 	    node.on("mouseout", function(thisData) {
 
 	      var thisNode = this;
-	      var thisD3Node = nodeGroup.select(".node_" + thisData.id);
+	      var thisD3Node = nodeGroup.select(".node_" + thisData["@rid"].replace('#', '_').replace(':', '_'));
 
 	      textGroup
 	      .selectAll("text")
