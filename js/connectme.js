@@ -13,8 +13,13 @@ jQuery(document).ready(function() {
 	});		
 	  
 
-	// d3.json("http://172.30.128.106:8080/sql").post("traverse * from (select from User where @rid=#11:1422) while $depth<=2", function(error, graph) {
-	d3.json("/test.json", function(error, graph) {
-	  force.addNodes(graph.nodes, graph.links);
-	});
+	d3.json("http://172.30.128.106:8080/node/11_1422/2",
+		function(error, graph) {
+		// d3.json("/test2.json", function(error, graph) {
+		  force.addNodes(graph.nodes, graph.links);
+		}
+	);
+
+	// d3.json("http://172.30.128.106:8080/node/rid/depth")
+	
 });
