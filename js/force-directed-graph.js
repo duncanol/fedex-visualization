@@ -47,19 +47,25 @@ ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
     .remove();
 
   node.enter()
-    .append("circle")
-    // .append("svg:image")
-    //   .attr("xlink:href", "/images/1394715037_location-24.svg")
+    // .append("circle")
+    .append("svg:image")
+      .attr("xlink:href", function(d) {
+      	if (d.class == "User") {
+      		return "/images/1394715037_location-24.svg";
+      	} else {
+					return "/images/1394715037_location-24.svg";
+      	}
+      })
       .attr("id", function(d) { return d.rid; })        
       .attr("class", function(d) { return "node node_" + d.rid; })
       .attr("r", function(d) { 
-        return d.name == 'Technology Strategy Board Network' ? 10 : 5; 
+        return d.class == 'User' ? 5 : 10;
       })
       .attr("width", function(d) { 
-        return d.name == 'Technology Strategy Board Network' ? 30 : 15; 
+        return d.class == 'User' ? 5 : 10;
       })
       .attr("height", function(d) { 
-        return d.name == 'Technology Strategy Board Network' ? 30 : 15; 
+        return d.class == 'User' ? 5 : 10;
       })
       .style("fill", function(d) { return color(d.group); })
       .call(this.force.drag);
@@ -74,8 +80,9 @@ ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
   });
 
 
-  this.dblclickNode(node);
-  this.mouseupNode(node);
+  this.clickNode(node);
+  // this.dblclickNode(node);
+  // this.mouseupNode(node);
   this.mouseoverNode(node);
   this.mouseoutNode(node);
   this.mouseoverLink(link);
@@ -97,28 +104,41 @@ ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
   this.force.start();
 };
 
-ForceDirectedGraph.prototype.dblclickNode = function(nodes) {
+ForceDirectedGraph.prototype.clickNode = function(nodes) {
 	var _this = this;
-	nodes.on("dblclick", function(d) {
-	  _this.textGroup
-	    .append("text")
-	    .attr("x", d.x - 10)
-	    .attr("y", d.y + 20)
-	    .text("Selected!")
-  });
+	nodes.on("click", function(d) {
+	  _this.selectedNode = this;
+	  d3.json("http://172.30.128.106:8080/node/" + d.rid + "/2",
+			function(error, graph) {
+			// d3.json("/test2.json", function(error, graph) {
+			  _this.addNodes(graph.nodes, graph.links);
+			}
+		);
+	});
 };
 
+// ForceDirectedGraph.prototype.dblclickNode = function(nodes) {
+// 	var _this = this;
+// 	nodes.on("dblclick", function(d) {
+// 	  _this.textGroup
+// 	    .append("text")
+// 	    .attr("x", d.x - 10)
+// 	    .attr("y", d.y + 20)
+// 	    .text("Selected!")
+//   });
+// };
 
-ForceDirectedGraph.prototype.mouseupNode = function(nodes) {
-	var _this = this;
-	nodes.on("mouseup", function(d) {
-  _this.textGroup
-    .append("text")
-    .attr("x", d.x - 10)
-    .attr("y", d.y + 20)
-    .text("Dragged!")
-  });
-};
+
+// ForceDirectedGraph.prototype.mouseupNode = function(nodes) {
+// 	var _this = this;
+// 	nodes.on("mouseup", function(d) {
+//   _this.textGroup
+//     .append("text")
+//     .attr("x", d.x - 10)
+//     .attr("y", d.y + 20)
+//     .text("Dragged!")
+//   });
+// };
 
 
 
@@ -132,6 +152,7 @@ ForceDirectedGraph.prototype.mouseoverNode = function(nodes) {
     _this.textGroup
       .selectAll("text")
       .remove();
+
 
     _this.textGroup
       .append("text")
