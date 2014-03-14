@@ -1,8 +1,6 @@
 var width = 1600,
     height = 1000;
 
-var color = d3.scale.category20();
-
 var force = d3.layout.force()
     .charge(-30)
     .linkDistance(30)
