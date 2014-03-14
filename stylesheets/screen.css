@@ -8104,21 +8104,21 @@ button.close {
 }
 
 /* line 7, ../sass/components/_structure.scss */
+.container-central {
+  min-height: 400px;
+}
+
+/* line 11, ../sass/components/_structure.scss */
 .container-info-panel {
   border-right: 2px solid #e4e4e4;
   min-height: 500px;
   background-color: rgba(228, 228, 228, 0.4);
+  padding: 1em;
 }
 
-/* line 13, ../sass/components/_structure.scss */
+/* line 18, ../sass/components/_structure.scss */
 .container-toggle-panel {
   border-left: 2px solid #e4e4e4;
   background-color: rgba(228, 228, 228, 0.4);
   padding: 1em;
-}
-/* line 18, ../sass/components/_structure.scss */
-.container-toggle-panel .btn {
-  width: 100%;
-  margin-bottom: 0.5em;
-  display: block;
 }
