@@ -4,9 +4,17 @@
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
 @import "compass/reset";
+
+@import "bootstrap";
+@import "bootstrap/theme";
+
+@import "partials/colors";
+
 @import "components/nodes";
+@import "components/structure";
+
 
 body{
-	border: 1px solid red;
+	border: 1px solid green;
 }
 
