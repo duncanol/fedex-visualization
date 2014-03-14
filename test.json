@@ -18,17 +18,17 @@
      ],
      "nodes": [
      {
-     	"id": 1,
+     	"rid": 1,
      	"name": "Node 1",
      	"group": 1
      },
      {
-     	"id": 2,
+     	"rid": 2,
      	"name": "Node 2",
      	"group": 2
      },
      {
-     	"id": 3,
+     	"rid": 3,
      	"name": "Node 3",
      	"group": 3
      }
