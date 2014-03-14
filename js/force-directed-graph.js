@@ -16,7 +16,7 @@ ForceDirectedGraph = function(config) {
   this.force
     .nodes(this.nodes)
     .links(this.links);
-}
+};
 
 ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
 
@@ -68,85 +68,19 @@ ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
   node.exit()
     .remove();
 
-  node.on("dblclick", function(d) {
-    textGroup
-    .append("text")
-    .attr("x", d.x - 10)
-    .attr("y", d.y + 20)
-    .text("Selected!")
-  });
-
-  node.on("mouseup", function(d) {
-    textGroup
-    .append("text")
-    .attr("x", d.x - 10)
-    .attr("y", d.y + 20)
-    .text("Dragged!")
-  });
-
   node.each(function(thisData) {
     var thisD3Node = nodeGroup.select(".node_" + thisData.rid);
     thisData.originalR = thisD3Node.attr("r");
   });
 
-  node.on("mouseover", function(thisData) {
-    
-    var thisNode = this;
-    var thisD3Node = nodeGroup.select(".node_" + thisData.rid);
 
-    textGroup
-      .selectAll("text")
-      .remove();
+  this.dblclickNode(node);
+  this.mouseupNode(node);
+  this.mouseoverNode(node);
+  this.mouseoutNode(node);
+  this.mouseoverLink(link);
 
-    textGroup
-      .append("text")
-        .text(thisData.name)
-          .attr("x", thisData.x + 10)
-          .attr("y", thisData.y - 10)
-    
-    thisD3Node
-      .transition()
-      .attr("r", thisData.originalR * 2);
-
-  });
-
-
-  node.on("mouseout", function(thisData) {
-
-    var thisNode = this;
-    var thisD3Node = nodeGroup.select(".node_" + thisData.rid);
-
-    textGroup
-    .selectAll("text")
-    .transition()
-    .duration(500)
-    .style('opacity', 0)
-    .each("end", function() {
-      this.remove();
-    })
-
-    if (thisData.originalR != null) {
-      thisD3Node.transition()
-        .attr("r", thisData.originalR);
-    }
-  });
-
-  link.on("mouseover", function(d) {
-    textGroup
-      .selectAll("text")
-      .remove();
-
-    var node1 = d.source;
-    var node2 = d.target;
-    var midX = (node1.x + node2.x) / 2;
-    var midY = (node1.y + node2.y) / 2;
-
-    textGroup
-      .append("text")
-        .text(d.source.name + " to " + d.target.name)
-          .attr("x", midX + 10)
-          .attr("y", midY - 10)
-  });
+  
 
   this.force.on("tick", function() {
     link.attr("x1", function(d) { return d.source.x; })
@@ -161,4 +95,103 @@ ForceDirectedGraph.prototype.addNodes = function(nodes, links) {
   });
 
   this.force.start();
+};
+
+ForceDirectedGraph.prototype.dblclickNode = function(nodes) {
+	var _this = this;
+	nodes.on("dblclick", function(d) {
+	  _this.textGroup
+	    .append("text")
+	    .attr("x", d.x - 10)
+	    .attr("y", d.y + 20)
+	    .text("Selected!")
+
+	  _this.pane.centre(d.x, d.y);
+
+  });
+};
+
+
+ForceDirectedGraph.prototype.mouseupNode = function(nodes) {
+	var _this = this;
+	nodes.on("mouseup", function(d) {
+  _this.textGroup
+    .append("text")
+    .attr("x", d.x - 10)
+    .attr("y", d.y + 20)
+    .text("Dragged!")
+  });
+};
+
+
+
+ForceDirectedGraph.prototype.mouseoverNode = function(nodes) {
+	var _this = this;
+	nodes.on("mouseover", function(thisData) {
+    
+    var thisNode = this;
+    var thisD3Node = _this.nodeGroup.select(".node_" + thisData.rid);
+
+    _this.textGroup
+      .selectAll("text")
+      .remove();
+
+    _this.textGroup
+      .append("text")
+        .text(thisData.name)
+          .attr("x", thisData.x + 10)
+          .attr("y", thisData.y - 10)
+    
+    thisD3Node
+      .transition()
+      .attr("r", thisData.originalR * 2);
+
+  });
+};
+
+
+ForceDirectedGraph.prototype.mouseoutNode = function(nodes) {
+	var _this = this;
+
+  nodes.on("mouseout", function(thisData) {
+
+    var thisNode = this;
+    var thisD3Node = _this.nodeGroup.select(".node_" + thisData.rid);
+
+    _this.textGroup
+	    .selectAll("text")
+	    .transition()
+	    .duration(500)
+	    .style('opacity', 0)
+	    .each("end", function() {
+	      this.remove();
+	    })
+
+    if (thisData.originalR != null) {
+      thisD3Node.transition()
+        .attr("r", thisData.originalR);
+    }
+  });
+};
+
+
+ForceDirectedGraph.prototype.mouseoverLink = function(links) {
+	var _this = this;
+
+	links.on("mouseover", function(d) {
+    _this.textGroup
+      .selectAll("text")
+      .remove();
+
+    var node1 = d.source;
+    var node2 = d.target;
+    var midX = (node1.x + node2.x) / 2;
+    var midY = (node1.y + node2.y) / 2;
+
+    _this.textGroup
+      .append("text")
+        .text(d.source.name + " to " + d.target.name)
+          .attr("x", midX + 10)
+          .attr("y", midY - 10)
+	  });
 };

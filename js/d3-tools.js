@@ -1,6 +1,5 @@
 ZoomablePane = function(config) {
 
-
   this.width = config.width;
   this.height = config.height;
   this.domNode = config.domNode;
@@ -39,4 +38,10 @@ ZoomablePane = function(config) {
 
   this.svg = svg;
   this.zoom = zoom;
+};
+
+
+ZoomablePane.prototype.centre = function(x, y) {
+  this.svg.selectAll("g")
+    .attr("translate(" + x + "," + y + ")");
 };
