@@ -105,9 +105,6 @@ ForceDirectedGraph.prototype.dblclickNode = function(nodes) {
 	    .attr("x", d.x - 10)
 	    .attr("y", d.y + 20)
 	    .text("Selected!")
-
-	  _this.pane.centre(d.x, d.y);
-
   });
 };
 

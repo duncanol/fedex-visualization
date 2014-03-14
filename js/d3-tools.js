@@ -21,10 +21,13 @@ ZoomablePane = function(config) {
     .append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
-        .call(zoom.on("zoom", redraw)).on("dblclick.zoom", null);
+        .call(zoom.on("zoom", redraw));
 
   function redraw() {
   
+    zoom.currentTranslate = d3.event.translate;
+    zoom.currentScale = d3.event.scale;
+
     if (zoom.scaleChanged()) {
       svg.selectAll("g")
         .transition()
@@ -43,10 +46,4 @@ ZoomablePane = function(config) {
 
   this.svg = svg;
   this.zoom = zoom;
-};
-
-
-ZoomablePane.prototype.centre = function(x, y) {
-  this.svg.selectAll("g")
-    .attr("translate(" + x + "," + y + ")");
 };
