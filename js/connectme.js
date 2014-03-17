@@ -13,9 +13,9 @@ jQuery(document).ready(function() {
 	});		
 	  
 
-	d3.json("http://172.30.128.106:8080/node/11_5/2",
-		function(error, graph) {
-		// d3.json("/test2.json", function(error, graph) {
+	// d3.json("http://172.30.128.106:8080/node/11_5/2",
+	// 	function(error, graph) {
+		d3.json("/test2.json", function(error, graph) {
 		  force.addNodes(graph.nodes, graph.links);
 		}
 	);

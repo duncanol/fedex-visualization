@@ -21,7 +21,7 @@ ZoomablePane = function(config) {
     .append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
-        .call(zoom.on("zoom", redraw));
+        .call(zoom.on("zoom", redraw)).on("dblclick.zoom", null);
 
   function redraw() {
   

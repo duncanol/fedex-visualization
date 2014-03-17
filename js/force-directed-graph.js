@@ -102,13 +102,13 @@ ForceDirectedGraph.prototype.refresh = function() {
       		return 15 + (Math.sqrt(Math.sqrt(d.edgesin)) * 2);
       	}
       })
-      .attr("charge", function(d) {
-      	if (d.classname == "User") {
-      		return -(Math.sqrt(d.edgesout) * 2);
-      	} else {
-      		return -(Math.sqrt(d.edgesin) * 2);
-      	}
-      })
+      // .attr("charge", function(d) {
+      // 	if (d.classname == "User") {
+      // 		return -(Math.sqrt(d.edgesout) * 2);
+      // 	} else {
+      // 		return -(Math.sqrt(d.edgesin) * 2);
+      // 	}
+      // })
       .style("fill", function(d) { return color(d.group); })
       .call(this.force.drag);
 
@@ -124,8 +124,7 @@ ForceDirectedGraph.prototype.refresh = function() {
   });
 
 
-  this.clickNode(node);
-  // this.dblclickNode(node);
+  this.dblclickNode(node);
   // this.mouseupNode(node);
   this.mouseoverNode(node);
   this.mouseoutNode(node);
@@ -149,9 +148,9 @@ ForceDirectedGraph.prototype.refresh = function() {
 };
 
 
-ForceDirectedGraph.prototype.clickNode = function(nodes) {
+ForceDirectedGraph.prototype.dblclickNode = function(nodes) {
 	var _this = this;
-	nodes.on("click", function(d) {
+	nodes.on("dblclick", function(d) {
 
 		jQuery('#detail-pane').removeClass("hide");
 		jQuery('#detail-name').html(d.name);
@@ -172,8 +171,10 @@ ForceDirectedGraph.prototype.clickNode = function(nodes) {
 	  // if (d.selected) {
 
 	  // } esl
-	  d3.json("http://172.30.128.106:8080/node/" + d.rid + "/2",
-			function(error, graph) {
+	  // d3.json("http://172.30.128.106:8080/node/" + d.rid + "/2",
+			// function(error, graph) {
+		// d3.json("/test3.json", function(error, graph) {
+		_this.withRandomData(d.rid, function(error, graph) {
 
 				var newNodes = graph.nodes.filter(function(node) {
 					return _this.nodes.filter(function(n2) {return n2.rid == node.rid;}).length == 0;
@@ -188,6 +189,70 @@ ForceDirectedGraph.prototype.clickNode = function(nodes) {
 		);
 	});
 };
+
+ForceDirectedGraph.prototype.withRandomData = function(rid, doSomethingFn) {
+
+	var classnames = ["User", "Organization", "Group", "UserGroup"];
+	var numberOfNodes = Math.floor((Math.random() * 20) + 2);
+
+	var newNodes = new Array();
+	var newLinks = new Array();
+
+	for (var i = 0; i < numberOfNodes; i++) {
+		var newNode = {};
+		newNode.name = "Node " + i;
+		newNode.description = "A description of " + i;
+		newNode.classname = classnames[Math.floor(Math.random() * 4)];
+		newNode.rid = ((Math.random() * 999999999) + "").replace('.', '_');
+		newNode.edgesin = Math.floor(Math.random() * 100);
+		newNode.edgesout = Math.floor(Math.random() * 100);
+		newNode.friendlyUrl = "/a-test-url";
+		newNodes.push(newNode);
+	}
+
+	for (var i = 0; i < newNodes.length; i++) {
+		newLinks.push({
+			osource: rid,
+			otarget: newNodes[i].rid,
+			rid: rid + "_" + newNodes[i].rid
+		});
+	}
+
+	for (var i = 0; i < this.nodes.length; i++) {
+		if (Math.floor(Math.random() * 100) == 0) {
+			newNodes.push(this.nodes[i]);
+		}
+	}
+
+	for (var i = 1; i < newNodes.length; i++) {
+		for (var j = 1; j < newNodes.length; j++) {
+			if (i == j) {
+				continue;
+			}
+
+			if (Math.floor(Math.random() * 8) == 0) {
+				
+				var alreadyExistingLink = function(link) {
+					return (link.osource == newNodes[i].rid && link.otarget == newNodes[j].rid) ||
+						(link.osource == newNodes[j].rid && link.otarget == newNodes[i].rid);
+				};
+
+				if (newLinks.filter(alreadyExistingLink).length == 0) {
+					newLinks.push({
+						osource: newNodes[i].rid,
+						otarget: newNodes[j].rid,
+						rid: newNodes[i].rid + "_" + newNodes[j].rid
+					});
+				}
+			}
+		}
+	}
+
+	doSomethingFn(null, {
+		links: newLinks,
+		nodes: newNodes
+	});
+}
 
 // ForceDirectedGraph.prototype.dblclickNode = function(nodes) {
 // 	var _this = this;
